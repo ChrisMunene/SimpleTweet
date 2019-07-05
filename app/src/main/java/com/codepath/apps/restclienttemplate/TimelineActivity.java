@@ -2,7 +2,9 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +30,7 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity implements ComposeDialogFragment.ComposeDialogListener {
 
     private TwitterClient client;
     private TweetAdapter tweetAdapter;
@@ -54,6 +56,7 @@ public class TimelineActivity extends AppCompatActivity {
 
         // Find the toolbar view inside the activity layout
         Toolbar toolbar = findViewById(R.id.toolbar);
+
         // Sets the Toolbar to act as the ActionBar for this Activity window.
         // Make sure the toolbar exists in the activity and is not null
         setSupportActionBar(toolbar);
@@ -91,7 +94,7 @@ public class TimelineActivity extends AppCompatActivity {
         //Find recyclerView
         rvTweets = findViewById(R.id.rvTweet);
 
-        //Setup recyclerView
+        //Setup layout manager
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(TimelineActivity.this);
         rvTweets.setLayoutManager(linearLayoutManager);
 
@@ -133,8 +136,9 @@ public class TimelineActivity extends AppCompatActivity {
             case R.id.action_settings:
                 return true;
             case R.id.composeBtn:
-                Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
-                startActivityForResult(intent, COMPOSE_REQUEST_CODE);
+//                Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
+//                startActivityForResult(intent, COMPOSE_REQUEST_CODE);
+                showComposeDialog();
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -195,16 +199,13 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
 
-                // Clear previous timeline if any
-                tweetAdapter.clear();
-                tweetAdapter.notifyDataSetChanged();
-                scrollListener.resetState();
-
                 // Convert fetched data to tweets and add to our data model
                 for(int i = 0; i < response.length(); i++){
                     try {
 
                         Tweet tweet = Tweet.fromJson(response.getJSONObject(i));
+
+                        // Set the lowest tweet id we have encountered
                         if(lowestTweetId == null ||tweet.uid < lowestTweetId) {
                             lowestTweetId = tweet.uid;
                         };
@@ -246,6 +247,27 @@ public class TimelineActivity extends AppCompatActivity {
                 throwable.printStackTrace();
             }
         }, (isRefreshing) ? null : lowestTweetId);
+    }
+
+    private void showComposeDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        ComposeDialogFragment composeDialogFragment= ComposeDialogFragment.newInstance("Some Title");
+        composeDialogFragment.show(fm, "compose_tweet_modal");
+    }
+
+    @Override
+    public void onFinishComposeDialog(Parcelable parcel) {
+        //Unwrap the tweet
+        Tweet tweet = Parcels.unwrap(parcel);
+        // Add the tweet to the top of the list
+        tweets.add(0, tweet);
+        tweetAdapter.notifyDataSetChanged();
+
+        //Scroll to the most recent tweet
+        rvTweets.scrollToPosition(0);
+
+        //Notify user that operation was successful
+        Toast.makeText(this, "Tweet posted successfully", Toast.LENGTH_SHORT).show();
     }
 
     public void showProgressBar() {
