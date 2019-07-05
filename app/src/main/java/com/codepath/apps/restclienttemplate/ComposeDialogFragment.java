@@ -58,10 +58,10 @@ public class ComposeDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Get field from view
+
         // Get input field and button
-        tweetInput = (EditText) view.findViewById(R.id.tweetInput);
-        tweetBtn = (Button) view.findViewById(R.id.tweetBtn);
+        tweetInput = view.findViewById(R.id.tweetInput);
+        tweetBtn = view.findViewById(R.id.tweetBtn);
 
         // Handle button click
         tweetBtn.setOnClickListener(new View.OnClickListener() {
@@ -78,6 +78,7 @@ public class ComposeDialogFragment extends DialogFragment {
         // Fetch arguments from bundle and set title
         String title = getArguments().getString("title", "Compose Tweet");
         getDialog().setTitle(title);
+
         // Show soft keyboard automatically and request focus to field
         tweetInput.requestFocus();
         getDialog().getWindow().setSoftInputMode(

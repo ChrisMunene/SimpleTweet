@@ -14,10 +14,13 @@ import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import java.util.List;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
     private List<Tweet> mTweets;
     private Context context;
+    private final int hasImage = 1, hasNoImage = 0;
 
     //pass in the Tweets array in constructor
     public TweetAdapter(List<Tweet> tweets){
@@ -27,12 +30,26 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     //For each row, inflate the layout and cache references into viewholder
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        ViewHolder viewHolder;
         context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View tweetView = inflater.inflate(R.layout.item_tweet, viewGroup, false);
-        ViewHolder viewHolder = new ViewHolder(tweetView);
+        switch (viewType) {
+            case hasImage:
+                View tweetViewWithImage = inflater.inflate(R.layout.item_tweet_embed_img, viewGroup, false);
+                viewHolder = new ViewHolder(tweetViewWithImage);
+                break;
+            case hasNoImage:
+                View tweetViewNoImage = inflater.inflate(R.layout.item_tweet, viewGroup, false);
+                viewHolder = new ViewHolder(tweetViewNoImage);
+                break;
+            default:
+                View defaultView = inflater.inflate(R.layout.item_tweet, viewGroup, false);
+                viewHolder = new ViewHolder(defaultView);
+                break;
+        }
+
         return viewHolder;
     }
 
@@ -46,8 +63,16 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         viewHolder.tvUsername.setText(tweet.user.name);
         viewHolder.tvBody.setText(tweet.body);
         viewHolder.tvTimestamp.setText(tweet.createdAt);
+        Glide.with(context).load(tweet.user.profileImageUrl).bitmapTransform(new RoundedCornersTransformation(context, 25, 0)).into(viewHolder.ivProfileImage);
 
-        Glide.with(context).load(tweet.user.profileImageUrl).into(viewHolder.ivProfileImage);
+        switch (viewHolder.getItemViewType()) {
+            case hasImage:
+                Glide.with(context).load(tweet.embeddedImageUrl).bitmapTransform(new RoundedCornersTransformation(context, 25, 0)).into(viewHolder.ivEmbedImage);
+                break;
+            default:
+                break;
+        }
+
     }
 
     @Override
@@ -55,24 +80,36 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         return mTweets.size();
     }
 
-    //create viewholder class
+    @Override
+    public int getItemViewType(int position) {
+        //More to come
+        if (mTweets.get(position).embeddedImageUrl != null) {
+            return hasImage;
+        } else if (mTweets.get(position).embeddedImageUrl == null ) {
+            return hasNoImage;
+        }
+        return -1;
+    }
 
+    //create viewholder class
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public ImageView ivProfileImage;
         public TextView tvBody;
         public TextView tvUsername;
         public TextView tvTimestamp;
+        public ImageView ivEmbedImage;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            ivProfileImage = (ImageView) itemView.findViewById(R.id.ivProfileImage);
-            tvUsername = (TextView) itemView.findViewById(R.id.tvUsername);
-            tvBody = (TextView) itemView.findViewById(R.id.tvBody);
-            tvTimestamp = (TextView) itemView.findViewById(R.id.tvTimestamp);
+            ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
+            tvUsername = itemView.findViewById(R.id.tvUsername);
+            tvBody = itemView.findViewById(R.id.tvBody);
+            tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
+            ivEmbedImage = itemView.findViewById(R.id.ivEmbedImage);
         }
     }
+
 
     // Clean all elements of the recycler
     public void clear() {

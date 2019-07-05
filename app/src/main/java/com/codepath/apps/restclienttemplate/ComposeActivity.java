@@ -27,18 +27,14 @@ public class ComposeActivity extends AppCompatActivity {
     private TwitterClient client;
     private ProgressDialog pd;
 
-    public final int COMPOSE_REQUEST_CODE = 20;
-    public final String USER_NAME = "userName";
-    public final String IMAGE_URL = "imageUrl";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose);
 
         // Get input field and button
-        tweetInput = (EditText) findViewById(R.id.tweetInput);
-        tweetBtn = (Button) findViewById(R.id.tweetBtn);
+        tweetInput = findViewById(R.id.tweetInput);
+        tweetBtn = findViewById(R.id.tweetBtn);
 
         // Init twitter client
         client = TwitterApp.getRestClient(ComposeActivity.this);

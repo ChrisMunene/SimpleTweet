@@ -1,9 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -41,11 +38,6 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
     private EndlessRecyclerViewScrollListener scrollListener;
     private Boolean isRefreshing = false;
     private Long lowestTweetId = null;
-    private View composeBtn;
-
-    public final int COMPOSE_REQUEST_CODE = 20;
-    public final String USER_NAME = "userName";
-    public final String IMAGE_URL = "imageUrl";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,8 +128,6 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
             case R.id.action_settings:
                 return true;
             case R.id.composeBtn:
-//                Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
-//                startActivityForResult(intent, COMPOSE_REQUEST_CODE);
                 showComposeDialog();
                 break;
             default:
@@ -147,27 +137,6 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
         return super.onOptionsItemSelected(item);
     }
 
-    // Handles return value from startActivityForResult
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Check if compose was successful
-        if(resultCode == RESULT_OK && requestCode == COMPOSE_REQUEST_CODE){
-            //Unwrap the tweet
-            Tweet tweet = (Tweet) Parcels.unwrap(data.getParcelableExtra(Tweet.class.getSimpleName()));
-
-            // Add the tweet to the top of the list
-            tweets.add(0, tweet);
-            tweetAdapter.notifyDataSetChanged();
-
-            //Scroll to the most recent tweet
-            rvTweets.scrollToPosition(0);
-
-            //Notify user that operation was successful
-            Toast.makeText(this, "Tweet posted successfully", Toast.LENGTH_SHORT).show();
-        }
-    }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {

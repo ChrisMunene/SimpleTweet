@@ -1,9 +1,11 @@
 package com.codepath.apps.restclienttemplate.models;
 
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
@@ -21,6 +23,9 @@ public class Tweet {
     public long uid; //Database id
     public User user;
     public String createdAt;
+    public Boolean hasMedia;
+    public String embeddedImageUrl;
+
 
     // Empty constructor for parceler
     public Tweet(){}
@@ -34,6 +39,7 @@ public class Tweet {
         tweet.uid = jsonObject.getLong("id");
         tweet.createdAt = getRelativeTimeAgo(jsonObject.getString("created_at"));
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
+        tweet.embeddedImageUrl = getEmbeddedImage(jsonObject.getJSONObject("entities"));
 
         return tweet;
     }
@@ -58,5 +64,23 @@ public class Tweet {
         }
 
         return relativeDate;
+    }
+
+    public static String getEmbeddedImage(JSONObject entities){
+        String imageUrl;
+        try {
+            JSONArray media = entities.getJSONArray("media");
+            if(media.length() > 0){
+                JSONObject mediaItem = media.getJSONObject(0);
+                imageUrl = mediaItem.getString("media_url_https");
+                Log.d("Tweet", String.format("%s", imageUrl));
+            } else {
+                imageUrl = null;
+            }
+        } catch (JSONException e) {
+            imageUrl = null;
+        }
+
+        return imageUrl;
     }
 }
