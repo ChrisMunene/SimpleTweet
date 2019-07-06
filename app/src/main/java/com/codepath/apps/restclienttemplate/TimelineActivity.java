@@ -43,6 +43,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
     private Long lowestTweetId = null;
     private FloatingActionButton fabCompose;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +85,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
         tweets = new ArrayList<>();
 
         //construct the adapter from the tweets
-        tweetAdapter = new TweetAdapter(tweets);
+        tweetAdapter = new TweetAdapter(tweets, this);
 
 
         //Find recyclerView
@@ -121,6 +122,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
                 showComposeDialog();
             }
         });
+
 
     }
 
@@ -233,11 +235,12 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
         }, (isRefreshing) ? null : lowestTweetId);
     }
 
-    private void showComposeDialog() {
+    public void showComposeDialog() {
         FragmentManager fm = getSupportFragmentManager();
         ComposeDialogFragment composeDialogFragment= ComposeDialogFragment.newInstance("Some Title");
         composeDialogFragment.show(fm, "compose_tweet_modal");
     }
+
 
     @Override
     public void onFinishComposeDialog(Parcelable parcel) {

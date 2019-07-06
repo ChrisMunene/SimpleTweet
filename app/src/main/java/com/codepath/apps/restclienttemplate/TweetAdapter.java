@@ -20,11 +20,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
     private List<Tweet> mTweets;
     private Context context;
+    TimelineActivity activity;
     private final int hasImage = 1, hasNoImage = 0;
 
     //pass in the Tweets array in constructor
-    public TweetAdapter(List<Tweet> tweets){
+    public TweetAdapter(List<Tweet> tweets, TimelineActivity activity){
         mTweets = tweets;
+        this.activity = activity;
     }
 
     //For each row, inflate the layout and cache references into viewholder
@@ -67,6 +69,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         viewHolder.tvRetweetCount.setText(tweet.retweetCount + "");
         viewHolder.tvFavCount.setText(tweet.favoriteCount + "");
 
+        viewHolder.ibReply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.showComposeDialog();
+            }
+        });
+
         Glide.with(context).load(tweet.user.profileImageUrl).bitmapTransform(new RoundedCornersTransformation(context, 25, 0)).into(viewHolder.ivProfileImage);
 
         switch (viewHolder.getItemViewType()) {
@@ -105,7 +114,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public TextView tvScreenName;
         public TextView tvFavCount;
         public TextView tvRetweetCount;
-
+        public ImageView ibReply;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -117,6 +126,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             ivEmbedImage = itemView.findViewById(R.id.ivEmbedImage);
             tvFavCount = itemView.findViewById(R.id.tvFavCount);
             tvRetweetCount = itemView.findViewById(R.id.tvRetweetCt);
+            ibReply = itemView.findViewById(R.id.ibReply);
         }
     }
 

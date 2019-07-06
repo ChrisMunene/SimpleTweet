@@ -77,7 +77,7 @@ public class ComposeDialogFragment extends DialogFragment {
         tvFullname = view.findViewById(R.id.tvFullname);
         tvUsername = view.findViewById(R.id.tvUsername);
         ivProfileImage = view.findViewById(R.id.ivProfileImage);
-        closeBtn = view.findViewById(R.id.closeBtn);
+        closeBtn = view.findViewById(R.id.ibReply);
 
         context = getContext();
 
