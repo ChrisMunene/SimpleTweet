@@ -62,7 +62,11 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         //populate the views according to this data
         viewHolder.tvUsername.setText(tweet.user.name);
         viewHolder.tvBody.setText(tweet.body);
+        viewHolder.tvScreenName.setText(tweet.user.screenName);
         viewHolder.tvTimestamp.setText(tweet.createdAt);
+        viewHolder.tvRetweetCount.setText(tweet.retweetCount + "");
+        viewHolder.tvFavCount.setText(tweet.favoriteCount + "");
+
         Glide.with(context).load(tweet.user.profileImageUrl).bitmapTransform(new RoundedCornersTransformation(context, 25, 0)).into(viewHolder.ivProfileImage);
 
         switch (viewHolder.getItemViewType()) {
@@ -98,6 +102,9 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public TextView tvUsername;
         public TextView tvTimestamp;
         public ImageView ivEmbedImage;
+        public TextView tvScreenName;
+        public TextView tvFavCount;
+        public TextView tvRetweetCount;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -105,8 +112,11 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvUsername = itemView.findViewById(R.id.tvUsername);
             tvBody = itemView.findViewById(R.id.tvBody);
+            tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
             ivEmbedImage = itemView.findViewById(R.id.ivEmbedImage);
+            tvFavCount = itemView.findViewById(R.id.tvFavCount);
+            tvRetweetCount = itemView.findViewById(R.id.tvRetweetCt);
         }
     }
 

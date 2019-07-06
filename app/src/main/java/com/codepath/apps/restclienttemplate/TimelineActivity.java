@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -91,6 +92,9 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
 
         //Setup layout manager
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(TimelineActivity.this);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvTweets.getContext(),
+                linearLayoutManager.getOrientation());
+        rvTweets.addItemDecoration(dividerItemDecoration);
         rvTweets.setLayoutManager(linearLayoutManager);
 
         // Retain an instance so that you can call `resetState()` for fresh searches
