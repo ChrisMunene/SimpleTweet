@@ -41,5 +41,21 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabCompose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/twitter_blue"
+        app:layout_constraintBottom_toBottomOf="@+id/swipeContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/swipeContainer"
+        app:layout_constraintVertical_bias="0.946"
+        app:srcCompat="@drawable/vector_compose_fab"
+        tools:ignore="VectorDrawableCompat" />
+
 
 </android.support.constraint.ConstraintLayout>

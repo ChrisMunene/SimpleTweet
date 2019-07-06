@@ -5,10 +5,15 @@
         android:id="@+id/composeBtn"
         android:icon="@drawable/ic_vector_compose"
         app:showAsAction="ifRoom"
+        android:color="@android:color/white"
         android:title="Compose">
     </item>
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
+        android:color="@android:color/white"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/miActionProgress"
         android:title="Loading..."

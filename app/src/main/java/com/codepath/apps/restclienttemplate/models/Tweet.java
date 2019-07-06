@@ -25,6 +25,8 @@ public class Tweet {
     public String createdAt;
     public Boolean hasMedia;
     public String embeddedImageUrl;
+    public int retweetCount;
+    public int favoriteCount;
 
 
     // Empty constructor for parceler
